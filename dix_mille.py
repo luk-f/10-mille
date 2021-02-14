@@ -1,6 +1,6 @@
 import dice
 from player import PlayerDixMille
-
+from counter_dices import CounterDices
 
 class DixMille():
 
@@ -17,7 +17,7 @@ class DixMille():
             self._players_dict[tmp_player.get_id()] = tmp_player
 
     def _roll_dices(self, number_of_dices: int = 5):
-        return dice.roll(f'{number_of_dices}d6')
+        return CounterDices(dice.roll(f'{number_of_dices}d6'))
 
     def _round_table(self):
         ...
@@ -28,10 +28,10 @@ class DixMille():
         while True:
             ...
 
-    def _count_point(self, dices_list):
+    def _count_point(self, dices_counter: CounterDices):
         ...
         point = 0
-        while dices_list > 2 or (dices_list.count(1) or dices_list.count(5)):
-            if dices_list.count(3):
+        while dices_counter > 2 or (dices_counter.count(1) or dices_counter.count(5)):
+            if dices_counter.count(3):
                 point += 1_000
                 
