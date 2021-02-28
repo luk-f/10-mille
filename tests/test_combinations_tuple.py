@@ -25,17 +25,13 @@ class TestCombinationsTuple(unittest.TestCase):
         """
         Teste si CombinationsTuple est hashable est peut être inseré dans un set()
         """
-        my_ct = CombinationsTuple([SUITE_1, JUST_1])
+        my_ct_1 = CombinationsTuple([SUITE_1, JUST_1])
         my_set = set()
-        my_set.add(my_ct)
-        print(my_set)
-        print()
-        my_ct = CombinationsTuple([JUST_1, SUITE_1])
-        my_set.add(my_ct)
-        print(my_set, end="\n\n")
-        for ct_tmp in my_set:
-            print(ct_tmp)
-            print(ct_tmp.__hash__())
+        my_set.add(my_ct_1)
+        my_ct_2 = CombinationsTuple([JUST_1, SUITE_1])
+        my_set.add(my_ct_2)
+        assert my_ct_1.__hash__() == my_ct_2.__hash__(), "doivent avoir le même hash"
+        assert len(my_set) == 1, "ne doit contenir qu'un objet"
 
 
 if __name__ == '__main__':

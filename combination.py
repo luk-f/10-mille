@@ -35,7 +35,7 @@ class _Combination:
         elif self._score == c_right._score and len(self._combi) > len(c_right._combi):
             return True
         else:
-            return True
+            return False
 
 
 """
