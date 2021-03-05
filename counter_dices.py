@@ -1,48 +1,44 @@
 from collections import Counter
-import scoring_param as sp
+
+from combinations_tuple import CombinationsTuple
+from combination import ALL_CBNT
+
 
 class CounterDices(Counter):
 
     def __hash__(self):
         return hash(tuple(sorted(self.elements())))
 
-    def best_triple(self):
-        if self[1] > 2:
-            return 1
-        for i in range(6, 1, -1):
-            if self[i] > 2:
-                return i
-        return 0
+    def has_point(self) -> bool:
+        if self[1] > 0 or self[5] > 0:
+            return True
+        elif self:
+            if self.most_common(1)[0][1] > 2:
+                return True
+        return False
 
-    def has_straight(self):
-        if self[2] and self[3] and self[4] and self[5]:
-            if self[1]:
-                return 1
-            elif self[6]:
-                return 2
-        else:
-            return 0
+    def all_unique_combinations(self) -> set:
+        combinations_set = set()
+        for each_cb in ALL_CBNT:
+            if each_cb._combi & self == each_cb._combi:
+                combinations_set.add(each_cb)
+        return combinations_set
 
-    def not_empty_point(self):
-        if self[1] > 0 or self[5] > 0 or self.best_triple > 0:
-            True
-        else:
-            False
-
-    def all_combinations(self):
-        if self.not_empty_point():
+    def all_combinations(self) -> set:
+        if self.has_point():
             scores_set = set()
-            # top bottom recursively
-            if sp.JUST_1 in self:
-                scores_set.add((sp.JUST_1, 100))
-                sub_set = self.subtract(sp.JUST_1).all_combinations()
-                for sub_score in sub_set:
-                    scores_set.add((sp.JUST_1, 
-                                    100 + sub_score[1]))
-
+            ct_set = self.all_unique_combinations()
+            while ct_set:
+                each_cb = ct_set.pop()
+                scores_set.add(CombinationsTuple([each_cb]))
+                # top bottom recursively
+                sub_ct_set = CounterDices(self - each_cb._combi).all_combinations()
+                while sub_ct_set:
+                    scores_set.add(CombinationsTuple([each_cb]) +
+                                    sub_ct_set.pop())
             return scores_set
         else:
-            return set([Counter([]), 0])
+            return set()
     
     def best_combination(self):
         ...
@@ -50,13 +46,13 @@ class CounterDices(Counter):
     def total_point(self):
         ...
     
+from combination import _HashIntCounter as HIC
+
 if __name__ == '__main__':
 
     ...
-    hash((1, 1, 2, 3))
-    ms = set([(CounterDices([1, 5]), 150), 
-            CounterDices([2, 1]), 
-            (CounterDices([5, 1]), 150)])
-
-    print(ms)
-    # print(set([(1,1),(1,3),(1,1)]).union(set.union(set([(1,1),(1,2),(1,1)]))))
+    my_cd = CounterDices([1, 1, 3, 4, 5])
+    my_hic = HIC([1])
+    print(my_cd)
+    print(my_hic)
+    print(my_cd - my_hic)

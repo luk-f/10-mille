@@ -1,11 +1,11 @@
-from typing import Counter
+from typing import Counter as _Counter
 
-IntCounter = Counter[int]
+_IntCounter = _Counter[int]
 
-class _HashIntCounter(IntCounter):
+class _HashIntCounter(_IntCounter):
     
-    # def __hash__(self):
-    #     return hash(tuple(sorted(self.elements())))
+    def __hash__(self):
+        return hash(tuple(sorted(self.elements())))
     ...
 
 class _Combination:
@@ -17,6 +17,9 @@ class _Combination:
     def __init__(self, combi_list: list = [], score: int = 0) -> None:
         self._combi = _HashIntCounter(combi_list)
         self._score = score
+
+    def count_dices(self):
+        return sum(list(self._combi.values()))
 
     def __str__(self) -> str:
         return f'{self._combi} -> {self._score} pts'
@@ -51,3 +54,17 @@ TRIPLE_3 = _Combination([3]*3, 300)
 TRIPLE_2 = _Combination([2]*3, 200)
 JUST_1 = _Combination([1], 100)
 JUST_5 = _Combination([5], 50)
+
+
+ALL_CBNT = [
+    SUITE_1,
+    SUITE_2,
+    TRIPLE_1,
+    TRIPLE_6,
+    TRIPLE_5,
+    TRIPLE_4,
+    TRIPLE_3,
+    TRIPLE_2,
+    JUST_1,
+    JUST_5,
+]

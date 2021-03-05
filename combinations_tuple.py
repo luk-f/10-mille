@@ -24,7 +24,7 @@ class CombinationsTuple(ListCombinations):
         return sum([x._score for x in self])
 
     def number_of_dices(self) -> int:
-        return sum([len(x._combi) for x in self])
+        return sum([x.count_dices() for x in self])
 
     def combination_of_dices(self) -> Counter:
         new_counter = Counter()
