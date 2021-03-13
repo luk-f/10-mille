@@ -6,7 +6,9 @@ class _HashIntCounter(_IntCounter):
     
     def __hash__(self):
         return hash(tuple(sorted(self.elements())))
-    ...
+
+    def __str__(self):
+        return ", ".join('|{}| {}'.format(k, v) for k, v in self.items())
 
 class _Combination:
     """

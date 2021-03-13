@@ -3,7 +3,6 @@ from collections import Counter
 from combinations_tuple import CombinationsTuple
 from combination import ALL_CBNT
 
-
 class CounterDices(Counter):
 
     def __hash__(self):
@@ -17,12 +16,21 @@ class CounterDices(Counter):
                 return True
         return False
 
-    def all_unique_combinations(self) -> set:
+    def all_unique_combinations(self) -> set():
         combinations_set = set()
         for each_cb in ALL_CBNT:
             if each_cb._combi & self == each_cb._combi:
                 combinations_set.add(each_cb)
         return combinations_set
+
+    # def all_unique_combinations_in_dict(self) -> dict:
+    #     combi_set = self.all_unique_combinations()
+    #     combi_dict = {}
+    #     combi_number = 0
+    #     while combi_set:
+    #         combi_dict[combi_number] = combi_set.pop()
+    #         combi_number += 1
+    #     return combi_dict
 
     def all_combinations(self) -> set:
         if self.has_point():
@@ -45,6 +53,9 @@ class CounterDices(Counter):
 
     def total_point(self):
         ...
+
+    def __repr__(self):
+        return f'{list(self.elements())}'
     
 from combination import _HashIntCounter as HIC
 
