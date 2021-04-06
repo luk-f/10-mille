@@ -2,6 +2,8 @@ import dice
 from player import PlayerDixMille
 from counter_dices import CounterDices
 from combination import _Combination
+from combinations_tuple import CombinationsTuple
+
 
 def ask_choose_combination(total_combination: int) -> int:
     choice = None
@@ -17,7 +19,13 @@ def ask_choose_combination(total_combination: int) -> int:
             print("\tChoose natural number")
     return choice
 
-class DixMille():
+def count_points_in_combination_list(combination_list : CombinationsTuple) -> int:
+    sum_of_points = 0
+    for combi in combination_list:
+        sum_of_points += combi.score
+    return sum_of_points
+
+class DixMille:
 
     def __init__(self, number_of_players: int = 2):
         
@@ -41,13 +49,22 @@ class DixMille():
         dices_aside = False
 
     def _round_player(self, player_id):
-        combination_dices_aside = []
+        """
+        Round for a player. Can roll dices as long as he obtain points.
+        """
+        combination_dices_aside = CombinationsTuple()
+        combination_dices_aside_total = CombinationsTuple()
         number_of_dices = 5
         while True:
+            # if player has put all dices aside
             if number_of_dices == 0:
+                combination_dices_aside_total.extend(combination_dices_aside)
+                combination_dices_aside = []
                 number_of_dices = 5
+            # Roll dices
             dices_table = self._roll_dices(number_of_dices)
             print(f'Dices obtained : {dices_table}')
+            # if no point, round stop with 0 point
             if not dices_table.has_point():
                 return 0
             dices_aside = False
@@ -67,7 +84,7 @@ class DixMille():
                         c_num += 1
                     if dices_aside:
                         unique_combi_dict[c_num] = _Combination()
-                        print(f'\t - ({c_num}) -> Raise {len(dices_table)} dice(s)')
+                        print(f'\t - ({c_num}) -> Reroll {len(dices_table)} dice(s)')
                         c_num += 1
                     selected = ask_choose_combination(c_num)
                     combi_selected = unique_combi_dict[selected]
@@ -88,8 +105,8 @@ class DixMille():
                 else:
                     print(f"\tDon't understand...")
             if choice == 'y':
-                return 1000
-
+                combination_dices_aside_total.extend(combination_dices_aside)
+                return count_points_in_combination_list(combination_dices_aside_total)
 
     def _count_point(self, dices_counter: CounterDices):
         ...

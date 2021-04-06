@@ -22,6 +22,10 @@ class _Combination:
 
     def count_dices(self):
         return sum(list(self._combi.values()))
+        
+    @property
+    def score(self):  
+        return self._score 
 
     def __str__(self) -> str:
         return f'{self._combi} -> {self._score} pts'
