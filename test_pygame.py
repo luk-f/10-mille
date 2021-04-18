@@ -2,14 +2,18 @@ import sys
 from typing import List, Tuple
 import pygame
 
+from dix_mille import DixMille
+
 pygame.init()
 font = pygame.font.Font('arial.ttf', 25)
 clock = pygame.time.Clock()
 
 BLACK = (0,0,0)
 WHITE = (255,255,255)
+RED = (200,0,0)
 BLUE1 = (0, 0, 255)
 BLUE2 = (0, 100, 255)
+BLUE2_1 = (0, 300, 255)
 BLUE3 = (100, 100, 255)
 
 if sys.version_info < (3,9):
@@ -27,6 +31,7 @@ class GraphicalDice:
       self.size = size
       self._number = None
       self.dots_list = ListCoord
+      self.selected = False
 
    def _define_dots_position_by_number(self):
       if self._number:
@@ -62,10 +67,13 @@ class GraphicalDice:
       self._define_dots_position_by_number()
 
    def drawing(self, current_display, number=None):
+      color_selected = BLACK
+      if self.selected:
+         color_selected = RED
       if number:
          self.number = number
       """draw outline"""
-      pygame.draw.rect(current_display, BLACK, 
+      self.rect = pygame.draw.rect(current_display, color_selected, 
          pygame.Rect(self.x-(20*self.size)/2, self.y-(20*self.size)/2, 
             20*self.size, 20*self.size),
          self.size, 4*self.size)
@@ -79,6 +87,9 @@ class GraphicalDice:
 class DixMillePyGame:
 
    def __init__(self, w=640, h=480):
+
+      self.game = DixMille()
+
       self.w = w
       self.h = h
       self.display = pygame.display.set_mode((self.w, self.h))
@@ -102,25 +113,25 @@ class DixMillePyGame:
          pygame.Rect(20, 120, 100, 50), 0, 0)
       pygame.draw.polygon(self.display, BLUE2, 
          [(20, 170), (120, 170), (120, 120)])
-      pygame.draw.rect(self.display, BLUE3, 
+      self.shuffle_button = pygame.draw.rect(self.display, BLUE3, 
          pygame.Rect(30, 130, 80, 30), 0, 0)
+      text = font.render("Shuffle", True, BLACK)
+      self.display.blit(text, [30, 130])
 
       pygame.display.flip()
+   
+   def shuffle_dices(self):
+      for _ in range(20):
+         result_dices = self.game._roll_dices(5).list()
+         for res_i, dice in enumerate(self.dices_table):
+            dice.number = result_dices[res_i]
+         self._update_ui()
+         pygame.time.wait(50)
 
 if __name__ == '__main__':
 
    my_pygame = DixMillePyGame()
    my_pygame.display.fill(WHITE)
-   # dice_1 = GraphicalDice(60, 60, 5)
-   # dice_1.drawing(my_pygame.display, 1)
-   # dice_2 = GraphicalDice(180, 60, 5)
-   # dice_2.drawing(my_pygame.display, 2)
-   # dice_3 = GraphicalDice(300, 60, 5)
-   # dice_3.drawing(my_pygame.display, 3)
-   # dice_4 = GraphicalDice(420, 60, 5)
-   # dice_4.drawing(my_pygame.display, 4)
-   # dice_5 = GraphicalDice(60, 180, 5)
-   # dice_5.drawing(my_pygame.display, 5)
    # dice_6 = GraphicalDice(180, 180, 5)
    # dice_6.drawing(my_pygame.display, 6)
 
@@ -141,10 +152,16 @@ if __name__ == '__main__':
             # proper notation(ex: event.y)
          elif event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEBUTTONUP:
             if event.type == pygame.MOUSEBUTTONDOWN:
-               print(event)
+               ...
             elif event.type == pygame.MOUSEBUTTONUP:
-               print(event)
-
+               if my_pygame.shuffle_button.collidepoint(event.pos):
+                  my_pygame.shuffle_dices()
+               for id, dice in enumerate(my_pygame.dices_table):
+                  if dice.rect.collidepoint(event.pos):
+                     print(f"Dice {id} touched")
+                     dice.selected = not dice.selected 
+                     my_pygame._update_ui()
+               
       if stop:
          break
       clock.tick(60)

@@ -56,6 +56,9 @@ class CounterDices(Counter):
 
     def __repr__(self):
         return f'{list(self.elements())}'
+
+    def list(self):
+        return list(self.elements())
     
 from combination import _HashIntCounter as HIC
 

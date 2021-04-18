@@ -27,6 +27,8 @@ def count_points_in_combination_list(combination_list : CombinationsTuple) -> in
 
 class DixMille:
 
+    best_rank = 1
+
     def __init__(self, number_of_players: int = 2):
         
         self._number_players = number_of_players

@@ -4,5 +4,7 @@ from counter_dices import CounterDices
 if __name__ == '__main__':
     
     game = DixMille()
-    points = game._round_player(1)
-    print(f"You are making {points} points !")
+    # points = game._round_player(1)
+    # print(f"You are making {points} points !")
+
+    print(game._roll_dices())
