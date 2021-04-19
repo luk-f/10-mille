@@ -1,7 +1,7 @@
 import pygame
 
 from dix_mille import DixMille
-from graphical_dice import GraphicalDice, GraphicalButton
+from graphical_object import GraphicalDice, GraphicalButton
 from settings import SIZE_DICES_BOARD
 from settings import BLACK, WHITE, RED
 
