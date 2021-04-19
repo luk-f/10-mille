@@ -31,10 +31,10 @@ class GraphicalButton:
     def drawing(self, current_display) -> pygame.draw.rect:
 
         pygame.draw.rect(current_display, BLUE1, 
-            pygame.Rect(20, 120, 100, 50), 0, 5)
+            pygame.Rect(20, 120, 100, 50), 0, 15)
 
         button = pygame.draw.rect(current_display, BLUE2, 
-            pygame.Rect(25, 125, 90, 40), 0, 5)
+            pygame.Rect(25, 125, 90, 40), 0, 10)
 
         text = self._font_render(self._text, True, BLACK)
         current_display.blit(text, [30, 130])
