@@ -37,8 +37,8 @@ class DixMillePyGame:
 
       self.display.fill(WHITE)
       text = font.render("Score", True, BLACK)
-      
       self.display.blit(text, [320, 240])
+      
       for dice in self.dices_board:
          dice.drawing(self.display)
 

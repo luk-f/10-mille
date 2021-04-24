@@ -1,6 +1,7 @@
 from dix_mille import DixMille
 from counter_dices import CounterDices
 from dix_mille_pygame import DixMillePyGame
+from boolean_popup import boolean_popup
 
 from settings import WHITE
 
@@ -27,8 +28,11 @@ if __name__ == '__main__':
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
-                stop = True
+                popup_res = boolean_popup("Do you want to quit game ?", my_pygame.display)
+                if popup_res:
+                    pygame.quit()
+                    stop = True
+                    break
             elif event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEBUTTONUP:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     ...
@@ -38,8 +42,8 @@ if __name__ == '__main__':
                     for id, dice in enumerate(my_pygame.dices_board):
                         if dice.rect.collidepoint(event.pos):
                             print(f"Dice {id} touched")
-                            dice.selected = not dice.selected 
-                my_pygame.update_ui()
+                            dice.selected = not dice.selected
+            my_pygame.update_ui()
                 
         if stop:
             break
