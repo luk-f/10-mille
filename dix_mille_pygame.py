@@ -57,12 +57,6 @@ class DixMillePyGame:
 
    def boolean_popup(self, message: str):
 
-      font = pygame.font.Font('arial.ttf', 25)
-      clock = pygame.time.Clock()
-      # doublons de test_pygame
-      BLACK = (0,0,0)
-      WHITE = (255,255,255)
-      
       self.display.fill(WHITE)
       pygame.display.set_caption(message)
       
