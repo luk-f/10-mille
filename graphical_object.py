@@ -13,12 +13,19 @@ else:
 
 class GraphicalButton:
 
-    def __init__(self, x, y, font_render, text):
+    def __init__(self, x, y, font_render, text, font_size, width=None):
         self._x = x
         self._y = y
         self._font_render = font_render
+        self._font_size = font_size
         self._text = text
+        self._length_text = len(self._text)
         self._state = True
+
+        if width:
+            self._width = self.width
+        else:
+            self._width = self._length_text*15
 
     @property
     def state(self) -> bool:
@@ -30,14 +37,20 @@ class GraphicalButton:
 
     def drawing(self, current_display) -> pygame.draw.rect:
 
+        # external rectangle
         pygame.draw.rect(current_display, BLUE1, 
-            pygame.Rect(20, 120, 100, 50), 0, 15)
+            pygame.Rect(self._x - self._length_text*7.5, self._y - 25, 
+                self._width, 50), 0, 15)
 
+        # internal rectangle
         button = pygame.draw.rect(current_display, BLUE2, 
-            pygame.Rect(25, 125, 90, 40), 0, 10)
+            pygame.Rect(self._x - self._length_text*7.5 + 5, self._y - 20,
+                self._width*0.9, 40), 0, 10)
 
+        # text
         text = self._font_render(self._text, True, BLACK)
-        current_display.blit(text, [30, 130])
+        text_size = self._font_size(self._text)
+        current_display.blit(text, [self._x - text_size[0]/2, self._y - 15])
 
         return button
 
