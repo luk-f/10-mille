@@ -1,7 +1,6 @@
 from dix_mille import DixMille
 from counter_dices import CounterDices
 from dix_mille_pygame import DixMillePyGame
-from boolean_popup import boolean_popup
 
 from settings import WHITE
 
@@ -28,7 +27,7 @@ if __name__ == '__main__':
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                popup_res = boolean_popup("Do you want to quit game ?", my_pygame.display)
+                popup_res = my_pygame.boolean_popup("Do you want to quit game ?")
                 if popup_res:
                     pygame.quit()
                     stop = True

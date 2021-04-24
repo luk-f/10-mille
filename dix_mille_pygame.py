@@ -38,7 +38,7 @@ class DixMillePyGame:
       self.display.fill(WHITE)
       text = font.render("Score", True, BLACK)
       self.display.blit(text, [320, 240])
-      
+
       for dice in self.dices_board:
          dice.drawing(self.display)
 
@@ -54,6 +54,39 @@ class DixMillePyGame:
             dice.number = result_dices[res_i]
          self.update_ui()
          pygame.time.wait(50)
+
+   def boolean_popup(self, message: str):
+
+      font = pygame.font.Font('arial.ttf', 25)
+      clock = pygame.time.Clock()
+      # doublons de test_pygame
+      BLACK = (0,0,0)
+      WHITE = (255,255,255)
+      
+      self.display.fill(WHITE)
+      pygame.display.set_caption(message)
+      
+      text = font.render(message, True, BLACK)
+      self.display.blit(text, [150, 30])
+
+      yes_button = GraphicalButton(250, 100, font.render, "Yes", font.size).\
+         drawing(self.display)
+      no_button = GraphicalButton(370, 100, font.render, "No", font.size).\
+         drawing(self.display)
+
+      pygame.display.flip()
+
+      while True:
+         for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                  print(event)
+                  if yes_button.collidepoint(event.pos):
+                     return True
+                  if no_button.collidepoint(event.pos):
+                     return False
+            elif event.type == pygame.QUIT:
+                  return False
+         clock.tick(60)
 
 if __name__ == '__main__':
 
