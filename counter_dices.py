@@ -49,7 +49,7 @@ class CounterDices(Counter):
             return set()
     
     def best_combination(self):
-        ...
+        return sorted(self.all_combinations())[-1]
 
     def total_point(self):
         ...
@@ -59,6 +59,13 @@ class CounterDices(Counter):
 
     def list(self):
         return list(self.elements())
+
+    def test_if_contains_only_combination(self):
+        self.best_combination()
+        if self - self.best_combination().combination_of_dices():
+            return False
+        else:
+            return True
     
 from combination import _HashIntCounter as HIC
 

@@ -2,7 +2,7 @@ import sys
 from typing import List, Tuple
 
 import pygame
-from settings import BLACK, RED, BLUE1, BLUE2
+from settings import BLACK, RED, BLUE1, BLUE2, GRAY1, GRAY2
 
 if sys.version_info < (3,9):
    Coordinate = Tuple[float, float]
@@ -13,33 +13,45 @@ else:
 
 class GraphicalButton:
 
-    def __init__(self, x, y, font_render, text, font_size, width=None):
+    def __init__(self, x, y, font_render, text, font_size,
+                 width=None, activate: bool = True):
         self._x = x
         self._y = y
         self._font_render = font_render
         self._font_size = font_size
         self._text = text
         self._text_size = self._font_size(self._text)
-        self._state = True
         self._width = self._text_size[0] + 20
+        self._activate = activate
 
     @property
-    def state(self) -> bool:
-        return self._state
+    def activate(self) -> bool:
+        return self._activate
 
-    @state.setter
-    def state(self, state: bool):
-        self._state = state
+    @activate.setter
+    def activate(self, activate: bool):
+        self._activate = activate
+
+    def _define_color_activation(self):
+
+        if self._activate:
+            self.color1 = BLUE1
+            self.color2 = BLUE2
+        else:
+            self.color1 = GRAY1
+            self.color2 = GRAY2
 
     def drawing(self, current_display) -> pygame.draw.rect:
 
+        self._define_color_activation()
+
         # external rectangle
-        pygame.draw.rect(current_display, BLUE1, 
+        pygame.draw.rect(current_display, self.color1, 
             pygame.Rect(self._x - self._width/2, self._y - 25, 
                 self._width, 50), 0, 15)
 
         # internal rectangle
-        button = pygame.draw.rect(current_display, BLUE2, 
+        self.button = pygame.draw.rect(current_display, self.color2, 
             pygame.Rect(self._x - self._width/2 + 5, self._y - 20,
                 self._width - 10, 40), 0, 10)
 
@@ -47,7 +59,7 @@ class GraphicalButton:
         text = self._font_render(self._text, True, BLACK)
         current_display.blit(text, [self._x - self._text_size[0]/2, self._y - 15])
 
-        return button
+        return self.button
 
 
 class GraphicalDice:

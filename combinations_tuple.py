@@ -41,6 +41,16 @@ class CombinationsTuple(ListCombinations):
             return True
         else:
             return False
+    
+    
+    def __lt__(self, c_right) -> bool:
+        if self.total_score() < c_right.total_score():
+            return True
+        elif self.total_score() == c_right.total_score() \
+                and len(self.number_of_dices()) > len(c_right.number_of_dices()):
+            return True
+        else:
+            return False
 
     def __hash__(self):
         return hash(tuple(sorted(self)))

@@ -8,15 +8,13 @@ from settings import WHITE
 
 import pygame
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 if __name__ == '__main__':
     
     game = DixMille()
     # points = game._round_player(1)
     # print(f"You are making {points} points !")
-
-    # print(game._roll_dices())
 
     my_pygame = DixMillePyGame()
     my_pygame.execute_game()
