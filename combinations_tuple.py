@@ -47,7 +47,7 @@ class CombinationsTuple(ListCombinations):
         if self.total_score() < c_right.total_score():
             return True
         elif self.total_score() == c_right.total_score() \
-                and len(self.number_of_dices()) > len(c_right.number_of_dices()):
+                and self.number_of_dices() > c_right.number_of_dices():
             return True
         else:
             return False

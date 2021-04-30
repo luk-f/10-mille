@@ -6,7 +6,7 @@ from dix_mille import DixMille
 from counter_dices import CounterDices
 
 from graphical_object import GraphicalDice, GraphicalButton
-from settings import SIZE_DICES_BOARD
+from settings import SIZE_DICES_BOARD, SIZE_DICES_ASIDE
 from settings import BLACK, WHITE, RED
 
 
@@ -26,6 +26,7 @@ class DixMillePyGame:
       pygame.display.set_caption('10 MILLE')
 
       self.dices_board = []
+      self.dices_aside = []
 
       self._number_of_current_dices_on_board = 5
       self._update_board()
@@ -33,7 +34,7 @@ class DixMillePyGame:
       self.buttons = {}
       self.buttons['shuffle'] = GraphicalButton(82.5, 145, DixMillePyGame.font.render, 
          "Shuffle", DixMillePyGame.font.size, 
-         activate=True
+         activate=False
       )
       self.buttons['put_aside'] = GraphicalButton(282.5, 145, DixMillePyGame.font.render, 
          "Put dice aside", DixMillePyGame.font.size, 
@@ -41,7 +42,7 @@ class DixMillePyGame:
       )
       self.buttons['next_p'] = GraphicalButton(500.5, 145, DixMillePyGame.font.render, 
          "Next player", DixMillePyGame.font.size, 
-         activate=False
+         activate=True
       )
 
    def _update_board(self):
@@ -58,6 +59,8 @@ class DixMillePyGame:
       self.display.blit(text, [320, 240])
 
       for dice in self.dices_board:
+         dice.drawing(self.display)
+      for dice in self.dices_aside:
          dice.drawing(self.display)
 
       for key_button in self.buttons:
@@ -84,9 +87,23 @@ class DixMillePyGame:
       while not one_player_win and not stop_game:
          # TODO : change by player's name
          for num_player in range(self.game._number_players):
+            self.buttons['next_p'].activate = True
+            while self.buttons['next_p'].activate and not stop_game:
+               for event in pygame.event.get():
+                  if event.type == pygame.QUIT:
+                     popup_res = self.boolean_popup("Do you want to quit game ?")
+                     if popup_res:
+                        stop_game = True
+                  elif event.type == pygame.MOUSEBUTTONUP:
+                     if self.buttons['next_p'].button.collidepoint(event.pos):
+                        self.buttons['next_p'].activate = False
+               self.update_ui()
+            self.buttons['next_p'].activate = False
+            self.buttons['shuffle'].activate = True
             logging.info(f"it's the turn of player {num_player}")
             end_player_turn = False
             point_player_turn = 0
+            self._number_of_current_dices_on_board = 5
             self._update_board()
             self.update_ui()
             dices_table = None
@@ -105,21 +122,20 @@ class DixMillePyGame:
                         
                         # to shuffle dices
                         if self.buttons['shuffle'].button.collidepoint(event.pos) and self.buttons['shuffle'].activate:
-                              # self.buttons['shuffle'].activate = False
+                              self.buttons['shuffle'].activate = True
                               dices_table = self.shuffle_dices()
-                              
-                              # DEBUG
-                              dices_table = CounterDices({4: 1, 5: 1, 1: 3})
-                              for i, n in enumerate([4, 1, 5, 1, 1]):
-                                 self.dices_board[i].number = n
-                              self.update_ui()  
-                              # DEBUG
-                              
+                              # # DEBUG : brut force choose dices if see bug
+                              # for res_i, dice in enumerate(self.dices_board):
+                              #    dice.number = [1, 1, 5, 5, 4][res_i]
+                              # dices_table = CounterDices([1, 1, 5, 5, 4])
+                              # # DEBUG
                               logging.info(f'Dices obtained : {dices_table}')
                               # if no point, round stop with 0 point
                               if not dices_table.has_point():
                                  point_player_turn = 0
                                  end_player_turn = True
+                                 self.buttons['shuffle'].activate = False
+                                 self.dices_aside = []
                               else:
                                  should_to_choose_dices = True
                                  unique_combi = dices_table.all_unique_combinations()
@@ -138,10 +154,33 @@ class DixMillePyGame:
                                     dice.selected = not dice.selected
                            logging.debug(dices_chosen)
                            if dices_chosen.has_point() and dices_chosen.test_if_contains_only_combination():
+                              logging.debug(dices_chosen.best_combination())
                               self.buttons['put_aside'].activate = True
                            else:
                               self.buttons['put_aside'].activate = False
 
+                        # put dice aside
+                        if self.buttons['put_aside'].button.collidepoint(event.pos) and self.buttons['put_aside'].activate:
+                           
+                           self.buttons['put_aside'].activate = False
+                           should_to_choose_dices = False
+                           for id, dice in enumerate(self.dices_board):
+                              if dice.selected:
+                                 dice.selected = False
+                           
+                           start_x = 42
+                           start_x += 72 * len(self.dices_aside)
+                           number_of_dice_put_aside = 0
+                           for dice_number, ite_dice in dices_chosen.best_combination().combination_of_dices().items():
+                              for _ in range(ite_dice):
+                                 g_dice = GraphicalDice(start_x, 300, SIZE_DICES_ASIDE)
+                                 g_dice.number = dice_number
+                                 self.dices_aside.append(g_dice)
+                                 start_x += 72
+                                 number_of_dice_put_aside += 1
+
+                           self._number_of_current_dices_on_board -= number_of_dice_put_aside
+                           self._update_board()
 
                   self.update_ui()   
                   if stop_game:

@@ -1,6 +1,7 @@
 
 # size dices
 SIZE_DICES_BOARD = 5
+SIZE_DICES_ASIDE = 3
 
 # color pygame
 BLACK = (0,0,0)
