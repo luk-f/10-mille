@@ -1,6 +1,5 @@
 import time
 
-
 class ProfilingContext:
     data = {}
     def __init__(self, name):
@@ -19,8 +18,18 @@ class ProfilingContext:
         for name, data in cls.data.items():
             print('{}: {}s avg for {} calls'.format(name, sum(data)/len(data), len(data)))
 
-
-with ProfilingContext('test'):
+def profile_decorator(func):
+    def wrapper(*args, **kwargs):
+        with ProfilingContext(func.__name__):
+            retval = func(*args, **kwargs)
+        return retval
+    return wrapper
+    
+@profile_decorator
+def test_function():
     time.sleep(1)
 
-ProfilingContext.print_summary()
+if __name__ == "__main__":
+    test_function()
+
+    ProfilingContext.print_summary()
