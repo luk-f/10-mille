@@ -8,6 +8,15 @@ Jeu de dés 10 mille avec PyGame.
 
 Le premier joueur qui atteint les 10 000 points gagne la partie.
 
+### Points
+
+ - :five: -> 50 points
+ - :one: -> 100 points
+ - :hash::hash::hash: -> #00 points
+ - :one::one::one: -> 1 000 points
+ - :one::two::three::four::five: -> 1 000 points
+ - :two::three::four::five::six: -> 1 000 points
+
 ### Déroulement de la partie
 
 Tous les joueurs commence avec un score global de 0 points.
@@ -35,14 +44,5 @@ créer une combinaison sur plusieurs lancés.
 
 Le joueur peut arrêter la manche quant il le souhaite (du moment que son dernier 
 lancé marque des points) sauf lorsque son score global est de 0. Il ne peut 
-s'arrêter seulement lorsque la somme des points mis de côté lors de la manche
+s'arrêter seulement lorsque la somme des points mis de côtés lors de la manche
  est égale ou supérieure à 1 000.
-
-### Points
-
- - :five: -> 50 points
- - :one: -> 100 points
- - :hash::hash::hash: -> #00 points
- - :one::one::one: -> 1 000 points
- - :one::two::three::four::five: -> 1 000 points
- - :two::three::four::five::six: -> 1 000 points
