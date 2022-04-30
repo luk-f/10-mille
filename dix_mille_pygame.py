@@ -1,6 +1,7 @@
 import logging
 
 import pygame
+import queue
 
 from dix_mille import DixMille
 from counter_dices import CounterDices
@@ -102,7 +103,7 @@ class DixMillePyGame:
             self.buttons['shuffle'].activate = True
             logging.info(f"it's the turn of player {num_player}")
             end_player_turn = False
-            point_player_turn = 0
+            put_aside_history = queue.Queue() # dices chosen during the player's round
             self._number_of_current_dices_on_board = 5
             self._update_board()
             self.update_ui()
@@ -180,8 +181,10 @@ class DixMillePyGame:
                                  number_of_dice_put_aside += 1
 
                            if number_of_dice_put_aside > 0:
+                              logging.info(f"dices valided {dices_chosen}")
                               self.buttons['shuffle'].activate = True
                               self._number_of_current_dices_on_board -= number_of_dice_put_aside
+                              put_aside_history.put(dices_chosen)
                               if self._number_of_current_dices_on_board == 0:
                                  self._number_of_current_dices_on_board = 5
                                  self.dices_aside = []
