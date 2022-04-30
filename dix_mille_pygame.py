@@ -48,7 +48,7 @@ class DixMillePyGame:
    def _update_board(self):
       self.dices_board = []
       start_x = 70
-      for dice_number in range(self._number_of_current_dices_on_board):
+      for _ in range(self._number_of_current_dices_on_board):
          self.dices_board.append(GraphicalDice(start_x, 60, SIZE_DICES_BOARD))
          start_x += 120
 
@@ -122,7 +122,7 @@ class DixMillePyGame:
                         
                         # to shuffle dices
                         if self.buttons['shuffle'].button.collidepoint(event.pos) and self.buttons['shuffle'].activate:
-                              self.buttons['shuffle'].activate = True
+                              self.buttons['shuffle'].activate = False
                               dices_table = self.shuffle_dices()
                               # # DEBUG : brut force choose dices if see bug
                               # for res_i, dice in enumerate(self.dices_board):
@@ -179,7 +179,12 @@ class DixMillePyGame:
                                  start_x += 72
                                  number_of_dice_put_aside += 1
 
-                           self._number_of_current_dices_on_board -= number_of_dice_put_aside
+                           if number_of_dice_put_aside > 0:
+                              self.buttons['shuffle'].activate = True
+                              self._number_of_current_dices_on_board -= number_of_dice_put_aside
+                              if self._number_of_current_dices_on_board == 0:
+                                 self._number_of_current_dices_on_board = 5
+                                 self.dices_aside = []
                            self._update_board()
 
                   self.update_ui()   
